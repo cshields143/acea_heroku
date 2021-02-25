@@ -5,6 +5,6 @@ def create_app():
     
     @app.route('/')
     def root():
-        return render_template('root.html')
+        return render_template('root.html', title='Blue Gold :D')
     
     return app
