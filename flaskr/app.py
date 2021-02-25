@@ -7,4 +7,8 @@ def create_app():
     def root():
         return render_template('root.html', title='Blue Gold :D')
     
+    @app.route('/overview')
+    def about():
+        return render_template('root.html', title='Project Overview - Blue Gold')
+    
     return app
