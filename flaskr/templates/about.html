@@ -251,27 +251,216 @@
     </tbody>
 </table>
 
-<p>The targets for each dataset, indicating water availability, are as follows:</p>
-<!--
-<table>
+<p>The input features and targets that indicate water availability for each dataset are as follows:</p>
+
+<table class="table">
     <thead>
-        <tr>
-            <th>Dataset</th>
-            <th>Targets</th>
+        <tr class="bg-secondary text-light">
+            <th class="p-1">Dataset</th>
+            <th class="p-1">Water Body Type</th>
+            <th class="p-1">Features</th>
+            <th class="p-1">Targets</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>Auser</td>
+            <td>Aquifer</td>
             <td>
-                Depth_to_Groundwater_SAL<br />
-                Depth_to_Groundwater_
+                <code>Rainfall_Gallicano</code><br />
+                <code>Rainfall_Pontetetto</code><br />
+                <code>Rainfall_Monte_Serra</code><br />
+                <code>Rainfall_Orentano</code><br />
+                <code>Rainfall_Borgo_a_Mozzano</code><br />
+                <code>Rainfall_Piaggione</code><br />
+                <code>Rainfall_Calavorno</code><br />
+                <code>Rainfall_Croce_Arcana</code><br />
+                <code>Rainfall_Tereglio_Coreglia_Antelminelli</code><br />
+                <code>Rainfall_Fabbriche_di_Vallico</code><br />
+                <code>Depth_to_Groundwater_PAG</code><br />
+                <code>Depth_to_Groundwater_DIEC</code><br />
+                <code>Temperature_Orentano</code><br />
+                <code>Temperature_Monte_Serra</code><br />
+                <code>Temperature_Ponte_a_Moriano</code><br />
+                <code>Temperature_Lucca_Orto_Botanico</code><br />
+                <code>Volume_POL</code><br />
+                <code>Volume_CC1</code><br />
+                <code>Volume_CC2</code><br />
+                <code>Volume_CSA</code><br />
+                <code>Volume_CSAL</code><br />
+                <code>Hydrometry_Monte_S_Quirico</code><br />
+                <code>Hydrometry_Piaggione</code>
+            </td>
+            <td>
+                <code>Depth_to_Groundwater_SAL</code><br />
+                <code>Depth_to_Groundwater_CoS</code><br />
+                <code>Depth_to_Groundwater_LT2</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Doganella</td>
+            <td>Aquifer</td>
+            <td>
+                <code>Rainfall_Monteporzio</code><br />
+                <code>Rainfall_Velletri</code><br />
+                <code>Volume_Pozzo_1</code><br />
+                <code>Volume_Pozzo_2</code><br />
+                <code>Volume_Pozzo_3</code><br />
+                <code>Volume_Pozzo_4</code><br />
+                <code>Volume_Pozzo_5+6</code><br />
+                <code>Volume_Pozzo_7</code><br />
+                <code>Volume_Pozzo_8</code><br />
+                <code>Volume_Pozzo_9</code><br />
+                <code>Temperature_Monteporzio</code><br />
+                <code>Temperature_Velletri</code>
+            </td>
+            <td>
+                <code>Depth_to_Groundwater_Pozzo_1</code><br />
+                <code>Depth_to_Groundwater_Pozzo_2</code><br />
+                <code>Depth_to_Groundwater_Pozzo_3</code><br />
+                <code>Depth_to_Groundwater_Pozzo_4</code><br />
+                <code>Depth_to_Groundwater_Pozzo_5</code><br />
+                <code>Depth_to_Groundwater_Pozzo_6</code><br />
+                <code>Depth_to_Groundwater_Pozzo_7</code><br />
+                <code>Depth_to_Groundwater_Pozzo_8</code><br />
+                <code>Depth_to_Groundwater_Pozzo_9</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Luco</td>
+            <td>Aquifer</td>
+            <td>
+                <code>Rainfall_Simignano</code><br />
+                <code>Rainfall_Siena_Poggio_al_Vento</code><br />
+                <code>Rainfall_Mensano</code><br />
+                <code>Rainfall_Montalcinello</code><br />
+                <code>Rainfall_Monticiano_la_Pineta</code><br />
+                <code>Rainfall_Sovicille</code><br />
+                <code>Rainfall_Ponte_Orgia</code><br />
+                <code>Rainfall_Scorgiano</code><br />
+                <code>Rainfall_Pentolina</code><br />
+                <code>Rainfall_Monteroni_Arbia_Biena</code><br />
+                <code>Depth_to_Groundwater_Pozzo_1</code><br />
+                <code>Depth_to_Groundwater_Pozzo_3</code><br />
+                <code>Depth_to_Groundwater_Pozzo_4</code><br />
+                <code>Temperature_Siena_Poggio_al_Vento</code><br />
+                <code>Temperature_Mensano</code><br />
+                <code>Temperature_Pentolina</code><br />
+                <code>Temperature_Monteroni_Arbia_Biena</code><br />
+                <code>Volume_Pozzo_1</code><br />
+                <code>Volume_Pozzo_3</code><br />
+                <code>Volume_Pozzo_4</code>
+            </td>
+            <td>
+                <code>Depth_to_Groundwater_Podere_Casetta</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Petrignano</td>
+            <td>Aquifer</td>
+            <td>
+                <code>Rainfall_Bastia_Umbra</code><br />
+                <code>Temperature_Bastia_Umbra</code><br />
+                <code>Temperature_Petrignano</code><br />
+                <code>Volume_C10_Petrignano</code><br />
+                <code>Hydrometry_Fiume_Chiascio_Petrignano</code>
+            </td>
+            <td>
+                <code>Depth_to_Groundwater_P24</code><br />
+                <code>Depth_to_Groundwater_P25</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Amiata</td>
+            <td>Water Spring</td>
+            <td>
+                <code>Rainfall_Castel_del_Piano</code><br />
+                <code>Rainfall_Abbadia_S_Salvatore</code><br />
+                <code>Rainfall_S_Fiora</code><br />
+                <code>Rainfall_Laghetto_Verde</code><br />
+                <code>Rainfall_Vetta_Amiata</code><br />
+                <code>Depth_to_Groundwater_S_Fiora_8</code><br />
+                <code>Depth_to_Groundwater_S_Fiora_11bis</code><br />
+                <code>Depth_to_Groundwater_David_Lazzaretti</code><br />
+                <code>Temperature_Abbadia_S_Salvatore</code><br />
+                <code>Temperature_S_Fiora</code><br />
+                <code>Temperature_Laghetto_Verde</code>
+            </td>
+            <td>
+                <code>Flow_Rate_Bugnano</code><br />
+                <code>Flow_Rate_Arbure</code><br />
+                <code>Flow_Rate_Ermicciolo</code><br />
+                <code>Flow_Rate_Galleria_Alta</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Lupa</td>
+            <td>Water Spring</td>
+            <td>
+                <code>Rainfall_Terni</code>
+            </td>
+            <td>
+                <code>Flow_Rate_Lupa</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Madonna di Canneto</td>
+            <td>Water Spring</td>
+            <td>
+                <code>Rainfall_Settefrati</code><br />
+                <code>Temperature_Settefrati</code>
+            </td>
+            <td>
+                <code>Flow_Rate_Madonna_di_Canneto</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Bilancino</td>
+            <td>Lake</td>
+            <td>
+                <code>Rainfall_S_Piero</code><br />
+                <code>Rainfall_Mangona</code><br />
+                <code>Rainfall_S_Agata</code><br />
+                <code>Rainfall_Cavallina</code><br />
+                <code>Rainfall_Le_Croci</code><br />
+                <code>Temperature_Le_Croci</code>
+            </td>
+            <td>
+                <code>Lake_Level</code><br />
+                <code>Flow_Rate</code>
+            </td>
+        </tr>
+        <tr>
+            <td>Arno</td>
+            <td>River</td>
+            <td>
+                <code>Rainfall_Le_Croci</code><br />
+                <code>Rainfall_Cavallina</code><br />
+                <code>Rainfall_S_Agata</code><br />
+                <code>Rainfall_Mangona</code><br />
+                <code>Rainfall_S_Piero</code><br />
+                <code>Rainfall_Vernio</code><br />
+                <code>Rainfall_Stia</code><br />
+                <code>Rainfall_Consuma</code><br />
+                <code>Rainfall_Incisa</code><br />
+                <code>Rainfall_Montevarchi</code><br />
+                <code>Rainfall_S_Savino</code><br />
+                <code>Rainfall_Laterina</code><br />
+                <code>Rainfall_Bibbiena</code><br />
+                <code>Rainfall_Camaldoli</code><br />
+                <code>Temperature_Firenze</code><br />
+            </td>
+            <td>
+                <code>Hydrometry_Nave_di_Rosano</code>
             </td>
         </tr>
     </tbody>
 </table>
--->
-<!--
-<iframe style="width:100%" onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))" src="{{ url_for('static', filename='Untitled.html') }}"></iframe>
--->
+
+<p>As we can see from a quick perusal of these tables, we lack essentially all geolocation data for the Lupa, Madonna di Canneto, Doganella, and Petrignano datasets; also worth noting is that Bilancino locations are also included in the Arno dataset. This means that we are able to construct the following maps:</p>
+<img src="{{ url_for('static', filename='amiata_stations.png') }}" width="585" height="400" class="img-thumbnail mx-auto d-block m-4" alt="Amiata stations" />
+<img src="{{ url_for('static', filename='arno_stations.png') }}" width="675" height="796" class="img-thumbnail mx-auto d-block m-4" alt="Arno and Bilancino stations" />
+<img src="{{ url_for('static', filename='auser_stations.png') }}" width="580" height="497" class="img-thumbnail mx-auto d-block m-4" alt="Auser stations" />
+<img src="{{ url_for('static', filename='luco_stations.png') }}" width="562" height="533" class="img-thumbnail mx-auto d-block m-4" alt="Luco stations" />
 {% endblock %}
+
