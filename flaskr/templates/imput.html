@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-hello, world
+<h1 class="text-center fw-bold">Where Are My Values? Where Did They Go?</h1>
+<p>The problem we wish to address, as mentioned in the <a href="{{ url_for('about') }}">project overview</a>, is the impact that hydrometeorological features have on water availability. However, before we can start to look at that question, we must first address an underlying, more "technical" issue: Missing values.</p>
+<p>The problem of our data, <em>the</em> problem, is what to do about all these missing values. The following image sums it up (where grey/red indicates a present value, white indicates a missing value):</p>
+<img src="{{ url_for('static', filename='allmissing.png') }}" alt="look at all that white" class="img-fluid" />
+<p>That's <em>a lot</em> of missing data. That's a lot of missing <em>target</em> data. My first instinct was to just throw out the majority of columns (and even datasets!); but that leaves us with too little to work with.</p>
+<p>In order to use sophisticated imputation techniques, we need to determine the <b>missing data mechanism</b>&mdash;in order words, "Why? Just... why?"</p>
 {% endblock %}
