@@ -1,6 +1,70 @@
 {% extends 'base.html' %}
 
 {% block content %}
-hello, world
+<h1 class="text-center fw-bold">Water Budgets</h1>
+<p>Well, it was about this time in the project that I realized <em>this is not a machine learning task</em>. What I mean by that is, we had one final requirement from Acea Group that I had not yet accomodated:</p>
+<p><strong>How do the individual features impact the individual targets?</strong></p>
+<p>While machine learning can do wonders for prediction, I realized that I needed to supplement it with some of that elusive hydrological domain knowledge.</p>
+
+<h2 class="text-center fw-bold">A Much Simpler Model</h2>
+<p>The last model used to generate predictions was of a highly different nature, and can be summarized like so:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='rpeg.html') }}"></iframe>
+<p>There's only so much water that falls out of the sky; every single drop will either evaporate back up to the sky, soak into the ground to recharge aquifers and other reservoirs, or it will roll downhill until it is collected in an above-ground catchment.</p>
+<p>To further explore this relationship, this "water budget," I chose to look at a single feature and a single target of a single dataset: How does rainfall in Mangona affect lake level in Bilancino?</p>
+
+<h2 class="text-center fw-bold">P</h2>
+<p>In order to turn the rainfall levels into a total volume of water, we need to know the total area that was rained on. This amounts to determining the catchment for Mangona.</p>
+<p>We know that, ultimately, Lake Bilancino is part of <a href="https://www.researchgate.net/figure/Map-showing-the-Arno-river-catchment-and-its-major-tributaries-the-largest-towns-and_fig1_233821084">the catchment for the Arno river</a>, and that Mangona, ultimately, is part of the catchment for Bilancino; what remains is to determine the square meter-age of this last subcatchment.</p>
+<p>Thanks to <a href="https://en-gb.topographic-map.com/maps/jcac/Tuscany/">a detailed topological map of Tuscany</a>and the distance-measuring tools of uMap, we can see that Mangona lies in a small bowl with a radius of approximately 760m.</p>
+<p>Thanks to geometry, we know that Mangona has a catchment area of roughly 1.81km²; as the rainfall column tells us the depth of the rainfall, we simply multiply by the area to determine total volume.</p>
+
+<h2 class="text-center fw-bold">E</h2>
+<p>The <a href="https://climate-indices.readthedocs.io/en/latest/">climate-indices</a> Python package allows us to use the Thornthwaite method for calculating potential evapotranspiration of a given location. The code required to compute this index is beyond the scope of this website, but a <a href="https://github.com/cshields143/bilancino_pet">GitHub repository</a> contains all the gory details.</p>
+<img src="{{ url_for('static', filename='evapotrans.png') }}" alt="Evapotranspiration is highest in summer, lowest in winter" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<p>Units of measurement are mm/month, so--just as with P--we multiply by the catchment area to determine total volume of water lost (making sure, again, the unit is m³)</p>
+
+<h2 class="text-center fw-bold">G</h2>
+<p>The final piece of our equation--"how much water seeped into the ground, never to be seen again?"--is possibly the most complicated and difficult to calculate. There are several factors to be taken into account:</p>
+<ul>
+    <li>How porous and permeable is the geology? Manmade structures such as roads and parking lots are notoriously impermeable, allowing all the water to runoff elsewhere</li>
+    <li>How saturated is the ground, currently? If there's already too much water underground, then again all the water will runoff somewhere else</li>
+    <li>What is the temperature at the time? As we shall see, temperature can actually impact the porosity and permeability of the geology</li>
+</ul>
+<p>Apparently, <a href="http://italy.places-in-the-world.com/8975438-place-Mangona.html">Mangona has a population of approximately 21 people</a>; satellite imagery from Google Maps seems to confirm that <a href="https://www.google.com/maps/@44.0418127,11.2004629,815m/data=!3m1!1e3">the area has undergone very little human development</a>.</p>
+<p>Using <a href="https://www502.regione.toscana.it/geoscopio/geologia.html">hydrological data from Regione Toscana</a>, we can conclude that there is no significant groundwater under Mangona.</p>
+<p>All this leaves is to determine the geological properties of the ground itself.</p>
+<p>Rocks are really, really complicated. It cannot be overstated just how complicated rocks are.</p>
+<p>Thanks to geological data again provided by Regione Toscana as well as <a href="https://www.geological-map.it/">a geological map of the Northern Appennines</a>, we can conclude that Mangona is part of what geologists colloquially refer to as "the Cervarola-Falterona Succession".</p>
+<p>And thanks to a passing mention in the seminal <a href="https://books.google.com/books?id=-AFkJkSUdDMC">Geologic Problem Solving with Microfossils</a>, we know that the Cervarola-Falterona Succession is comprised of <i>marl</i> and <i>sandstone</i>.</p>
+<p>To better understand why this data is so depressing, we must refresh our memory of high school sedimentary geology.</p>
+
+<h2 class="text-center fw-bold">But why marl models?</h2>
+<p>"Sedimentary rock" is slowly built up over time by bits of other rocks all lying on top of each other. Why don't these pebbles just scatter away as soon as they're deposited? Because of processes known as "diagenesis" and "cementation". Basically, while the pebbles are sitting on top of each other, chemical reactions occur which "glue" these rocks together.</p>
+<p>There are two common "glues" that can turn a pile of many rocks into one giant sedimentary rock: <i>silicates</i> and <i>carbonates</i>.</p>
+<p>This is important for two reasons:</p>
+<ol>
+    <li>Silicate and carbonate rocks have very different porosity/permeability properties; silicates are often more permeable, while such a straightforward answer is not really possible for carbonates; even the temperature of the air can affect how permeable carbonate sediment is</li>
+    <li>Marl is an example of carbonate sediment; sandstone is an example of silicate sediment</li>
+</ol>
+<p>Even in an area as small and confined as Mangona, permeability is, to be blunt, a nightmare to figure out.</p>
+<p>The standard unit of measurement for geological permeability is the millidarcy; <a href="https://en.wikipedia.org/wiki/Permeability_(Earth_sciences)">one crowd-sourced knowledge-base management resource</a> indicates that the permeability of sandstone can range anywhere from 1 to 1000 millidarcys, whereas the permeability of dolomite and limestone (carbonates) is far lower, from 1% to 10% of a single millidarcy.</p>
+
+<h2 class="text-center fw-bold">Darcy's Law</h2>
+<p>We can use Darcy's Law to calculate how much water was lost to the soil:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='darcy.html') }}"></iframe>
+<p>That's a gnarly equation, but many of the terms will cancel out. Assuming permeability of 1md, pressure of 1atm, a viscosity for water of 1cP, and a thickness of 25m, this yields approximately 72,500m³ per day</p>
+
+<h2 class="text-center fw-bold">Calculate R &amp Verify Results</h2>
+<img src="{{ url_for('static', filename='final.png') }}" alt="Water is added in winter, removed in summer" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<p>In order to verify our results, we must turn lake level into volume of water--and as we are interested in the water budget, we only need changes in volume. (It has been noted that the surface area of Lake Bilancino is approximately 5km²)</p>
+<img src="{{ url_for('static', filename='final2.png') }}" alt="Technically a prediction" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<p>This corresponds to a <b>mean absolute error</b> of almost 32m, and a <b>root mean squared error</b> of about 40⅔m</p>
+
 {% endblock %}
 
