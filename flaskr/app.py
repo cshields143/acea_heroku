@@ -25,6 +25,6 @@ def create_app():
     
     @app.route('/retro')
     def alldone():
-        return 'hello, world'
+        return render_template('alldone.html', title='You know, I\'ve learned something today')
     
     return app
