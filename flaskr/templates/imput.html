@@ -5,6 +5,58 @@
 <p>The problem we wish to address, as mentioned in the <a href="{{ url_for('about') }}">project overview</a>, is the impact that hydrometeorological features have on water availability. However, before we can start to look at that question, we must first address an underlying, more "technical" issue: Missing values.</p>
 <p>The problem of our data, <em>the</em> problem, is what to do about all these missing values. The following image sums it up (where grey/red indicates a present value, white indicates a missing value):</p>
 <img src="{{ url_for('static', filename='allmissing.png') }}" alt="look at all that white" class="img-fluid" />
-<p>That's <em>a lot</em> of missing data. That's a lot of missing <em>target</em> data. My first instinct was to just throw out the majority of columns (and even datasets!); but that leaves us with too little to work with.</p>
-<p>In order to use sophisticated imputation techniques, we need to determine the <b>missing data mechanism</b>&mdash;in order words, "Why? Just... why?"</p>
+<p>That's <em>a lot</em> of missing data. That's a lot of missing <em>target</em> data. Our approach to cleaning this data revolves almost entirely around what we do with missing values.</p>
+
+<h2 class="text-center fw-bold">Cleaning the Data</h2>
+<p>In preparation for four models to predict water availability in four different types of water bodies, we first design four data-cleaning pipelines. While we do indeed create four different methods for cleaning, they all follow the same general pattern:</p>
+<ul>
+    <li>Drop where date is null</li>
+    <li>Trim beginnings and ends to where targets are (generally) not null</li>
+    <li>Discard features that, at this point, are 70% null</li>
+    <li>Use absolute value of some columns (as specified in the included dataset description file)</li>
+    <li>Use multiple imputation to fill all remaining null values</li>
+</ul>
+<p>How we accomplish this feat is very straight forward: We create "atomic" cleaning functions, each cleaning one aspect of an arbitrary dataset, and then we conglomerate them into "molecular" pipelines (ie, functions).</p>
+<p>Here we find the atomic cleaning functions:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='atomic.html') }}"></iframe>
+
+<h2 class="text-center fw-bold">Multiple Imputation By Chained Equations</h1>
+<p>Multiple imputation works by, instead of creating a single imputed dataset, creating *many*. This allows us to use statistical methods on the individual imputed values. Not only do we know which imputation is "most likely," but we also quantify how certain we are about those imputations.</p>
+<p>It is the final "atomic" cleaning function, and here we define it:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='impute.html') }}"></iframe>
+
+<h2 class="text-center fw-bold">Put It All Together</h2>
+<p>Our "molecular" cleaning pipelines at this point are simple functions; they require only the dataset itself and a list of columns that are the targets of the datasets. They are defined here:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='clean.html') }}"></iframe>
+
+<h2 class="text-center fw-bold">Final Preprocessing</h2>
+<p>There are only two additional steps we must carry out before proceeding to the modeling and predicting.</p>
+<p>First, we must bin our data. This necessity is the result of several assertions made by Acea Group:</p>
+<ul>
+    <li>They are not interested in one-day-ahead forecasts</li>
+    <li>They do not want us to use values we predicted as input for further predictions</li>
+    <li>We cannot use non-target data from the future (ie, data that has not been collected yet)</li>
+</ul>
+<p>For our purposes, we bin each dataset according to three different lengths of time: small (5 days), medium (30 days), and large (90 days). The following function handles this admirably:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='bin.html') }}"></iframe>
+<p>Second, we must <em>standardize</em> our data. Because we will be using many different modeling techniques across all different datasets, with different units of measurement and different sets of features/targets, we must first standardize so that our metrics are comparable across each test.</p>
+<p>This class will enable us to do just that:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='scale.html') }}"></iframe>
+
 {% endblock %}
+
