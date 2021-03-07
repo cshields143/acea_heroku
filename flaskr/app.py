@@ -17,7 +17,7 @@ def create_app():
     
     @app.route('/ml')
     def machine():
-        return 'hello, world'
+        return render_template('machine.html', title='Machine Learning - Blue Gold')
     
     @app.route('/water-budget')
     def rpeg():
