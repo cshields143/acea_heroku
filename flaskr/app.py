@@ -21,7 +21,7 @@ def create_app():
     
     @app.route('/water-budget')
     def rpeg():
-        return 'hello, world'
+        return render_template('rpeg.html', title='Water Budget - Blue Gold')
     
     @app.route('/retro')
     def alldone():
