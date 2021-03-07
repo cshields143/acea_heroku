@@ -1,6 +1,224 @@
 {% extends 'base.html' %}
 
 {% block content %}
-hello, world
+<h1 class="text-center fw-bold">In Which Machines Learn Water Availability</h1>
+<p>My first approach to this problem employed <em>extensive</em> machine learning. Here's the story about that.</p>
+
+<h2 class="text-center fw-bold">Validation of the Models</h2>
+<p>In order to provide a single validation pipeline for any and all types of models (including for different types of water bodies), we adopt the following algorithm:</p>
+<ul>
+    <li>The entire dataset (as provided by Acea Group, and then cleaned) is given to the validator</li>
+    <li>The first 2/3 of the data is initially used for training</li>
+    <li>After training, we only predict the targets for the very next time step (5, 30, or 90 days), using the inputs from the very last step that was trained</li>
+    <li>Compute metrics and store the results for that single prediction</li>
+    <li>Add that very next step, including its features, to the training data</li>
+    <li>Repeat</li>
+</ul>
+<p>This allows us to adhere to not using predicted values to generate further predictions, while still enabling us to test each model under a wide array of potential uses. We implement the algorithm like so:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='validate.html') }}"></iframe>
+
+<h2 class="text-center fw-bold">General Model</h2>
+<p>Our models will not know in advance what features they will have to work with, how many/what kinds of targets to predict, or what type of water body they are looking at. On top of that, they must all still conform to the interface assumed by the validation pipeline.</p>
+<p>To that end, each model will have an initialization, fit, and predict method. Initialization generates the base model; fit will train that model on arrays of X and Y data; predict will use the last row of the fitted data to predict the targets at the very next step in time.</p>
+
+<h2 class="text-center fw-bold">Specific Models</h2>
+<p>As a baseline, we build a model that always predicts 0:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='zero.html') }}"></iframe>
+<p>Next we create three different kinds of models: One for linear, random forest, and a simple LSTM implementation. These are implemented like so:</p>
+<iframe
+    style="width:100%"
+    onload="javascript:(function(o){o.style.height=o.contentDocument.body.offsetHeight+35+'px'}(this))"
+    src="{{ url_for('static', filename='models.html') }}"></iframe>
+
+<h2 class="text-center fw-bold">Results</h2>
+<p>First, we present our baseline, always-guess-zero scores (note that, because data was standardized before training, this means "always guess mean").</p>
+<table class="table">
+    <thead>
+        <tr class="bg-secondary text-light">
+            <th>Type of Water Body</th>
+            <th>Bin Size (days per row)</th>
+            <th>MAE</th>
+            <th>RMSE</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="3">Aquifer</td>
+            <td>5</td>
+            <td>1.0448959</td>
+            <td>1.3030676</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td>1.0534748</td>
+            <td>1.3158396</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td>1.0742511</td>
+            <td>1.3403001</td>
+        </tr>
+        <tr>
+            <td rowspan="3">Water Spring</td>
+            <td>5</td>
+            <td>0.8080456</td>
+            <td>1.0091143</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td>0.8288318</td>
+            <td>1.0585636</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td>0.9249991</td>
+            <td>1.2645254</td>
+        </tr>
+        <tr>
+            <td rowspan="3">Lake</td>
+            <td>5</td>
+            <td>0.6307176</td>
+            <td>0.8235853</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td>0.6858331</td>
+            <td>0.8318356</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td>0.7132913</td>
+            <td>0.8533033</td>
+        </tr>
+        <tr>
+            <td rowspan="3">River</td>
+            <td>5</td>
+            <td>0.8148054</td>
+            <td>1.1039448</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td>0.9084226</td>
+            <td>1.1399640</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td>0.9547518</td>
+            <td>1.1726109</td>
+        </tr>
+    </tbody>
+</table>
+<p>Because I am a good data scientist, I was able to beat benchmark for all types and bin sizes. The best models for each were (when two models are listed, the first has the best MAE, the second RMSE):</p>
+
+<table class="table">
+    <thead>
+        <tr class="bg-secondary text-light">
+            <th>Type of Water Body</th>
+            <th>Bin Size</th>
+            <th>Best Model</th>
+            <th>MAE</th>
+            <th>RMSE</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="3">Aquifer</td>
+            <td>5</td>
+            <td><b>Random Forest</b></td>
+            <td>0.4930988</td>
+            <td>0.6940713</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td><b>Linear Model</b></td>
+            <td>0.5481343</td>
+            <td>0.7065622</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td><b>Linear Model</b></td>
+            <td>0.5468855</td>
+            <td>0.6977315</td>
+        </tr>
+        <tr>
+            <td rowspan="3">Water Spring</td>
+            <td>5</td>
+            <td><b>Random Forest</b></td>
+            <td>0.7235955</td>
+            <td>0.9057711</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td><b>Linear Model</b></td>
+            <td>0.8011174</td>
+            <td>1.0055254</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td><b>Random Forest</b></td>
+            <td>0.8753091</td>
+            <td>1.1943232</td>
+        </tr>
+        <tr>
+            <td rowspan="3">Lake</td>
+            <td>5</td>
+            <td><b>Random Forest</b></td>
+            <td>0.5725312</td>
+            <td>0.7333214</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td><b>Random Forest</b></td>
+            <td>0.6045679</td>
+            <td>0.7356066</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td><b>LSTM</b></td>
+            <td>0.7115235</td>
+            <td>0.8519560</td>
+        </tr>
+        <tr>
+            <td rowspan="3">River</td>
+            <td>5</td>
+            <td><b>Random Forest</b></td>
+            <td>0.4940218</td>
+            <td>0.7879699</td>
+        </tr>
+        <tr>
+            <td>30</td>
+            <td><b>Random Forest</b> <span class="text-danger fw-bold">/</span> <b>Linear Model</b></td>
+            <td>0.6143383</td>
+            <td>0.8396576</td>
+        </tr>
+        <tr>
+            <td>90</td>
+            <td><b>Random Forest</b></td>
+            <td>0.8849608</td>
+            <td>1.0766498</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Finally, we present plots for the best model in each class (blue is actual, orange is predicted):</p>
+<img src="{{ url_for('static', filename='res1.png') }}" alt="Aquifers, Random Forest, 5 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res2.png') }}" alt="Aquifers, Linear Model, 30 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res3.png') }}" alt="Aquifers, Linear Model, 90 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res4.png') }}" alt="Water Springs, Random Forest, 5 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res5.png') }}" alt="Water Springs, Linear Model, 30 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res6.png') }}" alt="Water Springs, Random Forest, 90 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res7.png') }}" alt="Lake, Random Forest, 5 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res8.png') }}" alt="Lake, Random Forest, 30 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res9.png') }}" alt="Lake, LSTM, 90 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res10.png') }}" alt="River, Random Forest, 5 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res11.png') }}" alt="River, 30 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+<img src="{{ url_for('static', filename='res12.png') }}" alt="River, Random Forest, 90 Days" class="img-fluid img-thumbnail mx-auto d-block m-4" />
+
 {% endblock %}
 
